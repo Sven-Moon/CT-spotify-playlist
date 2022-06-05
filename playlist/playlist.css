@@ -1,0 +1,167 @@
+body * {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  /* padding: .25rem; */
+  background-color: rgba(3, 4, 39, 0.438);
+}
+
+.player_container {
+  max-width: 600px;
+  background-image: url("../assets/images/background.jpg");
+  background-position: center;
+  background-clip: padding-box;
+  background-repeat: no-repeat;
+  border-radius: 3px;
+  border: 4px solid rgb(3, 4, 39)
+}
+
+.container * {
+  display: flex;
+  color: white;
+}
+
+.row {
+  background-color: transparent;
+  align-items: center;
+  justify-content: space-between;
+  padding: .5rem 1rem;
+  width: 100%;
+}
+
+.playlist-name {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: .5rem;
+  width: 75%;
+  border: 1px solid #9acd32;
+  margin-right: 1rem;
+}
+
+.play_btn {
+  border-radius: 50%;
+  height: 2rem;
+  aspect-ratio: 1;
+  margin-right: 1rem;
+}
+
+.playing {
+  border: 1px solid #9acd32;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: .5rem .5rem;
+  width: 85%;
+  margin-left: 1rem;
+}
+
+.add-song,
+.to-player {
+  margin: .5rem;
+  background-color: rgb(105, 139, 37);
+  padding: .25rem .5rem;
+  font-weight: bold;
+  border-radius: 6px;
+  /* flex: 1 0 0%; */
+}
+
+.text_input {
+  border-radius: 3px;
+  border: 1px solid greenyellow;
+  background-color: rgba(23, 23, 39, 0.85);
+  color: rgb(197, 197, 197);
+  padding: .5rem 1rem;
+  margin: .25rem;
+}
+
+.artist_input {
+  width: 50%;
+}
+
+.song-title_input {
+  width: 75%;
+}
+
+.search_btn {
+  margin-right: auto;
+  margin-left: 1rem;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  height: 2rem;
+  aspect-ratio: 1;
+  background-image: url('../assets/images/search-ico.svg');
+  background-size: 1.5rem;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.search_btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.search_btn:disabled {
+  background-color: rgba(211, 211, 211, 0.4);
+  cursor: not-allowed;
+}
+
+.text_input:focus-visible {
+  box-shadow: 0 0 3px 2px rgba(172, 255, 47, 0.288);
+}
+
+.search_results {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  padding: .75rem;
+  align-items: center;
+}
+
+.song {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgb(34, 34, 34);
+  border-bottom: 1px solid #9acd32;
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 1rem;
+  flex: 0 1 100%;
+}
+
+
+.song-name {
+  color: white;
+  font-size: 2rem;
+}
+
+.song-artist {
+  color: #bbbbbb;
+  margin-inline-start: .5rem;
+}
+
+.playlist {
+  width: 100%;
+  padding: .5rem 1rem;
+}
+
+.playlist-item {
+  display: flex;
+  align-items: center;
+}
+
+.remove-song {
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  right: 0;
+  border-radius: 3px;
+  border: none;
+  background-color: transparent;
+  margin: .25rem;
+}
+
+.round {
+  border-radius: 50%;
+}

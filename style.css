@@ -1,0 +1,22 @@
+@import './jukebox/jukebox.css';
+@import "./playlist/playlist.css";
+
+* {
+  box-sizing: border-box;
+}
+
+*.hidden {
+  display: none
+}
+
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  margin-block-start: 0;
+}
+
+.highlight:hover {
+  box-shadow: 0 0 2px 3px rgba(255, 255, 255, 0.589);
+  border: none;
+}

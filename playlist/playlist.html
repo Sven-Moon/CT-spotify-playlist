@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="playlist.js" type="module"></script>
+  <link rel="stylesheet" href="playlist.css">
+  <title>Playlist</title>
+</head>
+
+<body>
+  <div class="player_container">
+    <div class="container song-player">
+      <div class="row">
+        <div class="playlist-name">Playlist Name</div>
+        <button class="add-song">+ Song</button>
+      </div>
+      <div class="row">
+        <button class="play_btn"><object data="../assets/images/play-button-green.svg" height="32"
+            width="32"></object></button>
+        <div class="playing">Artist/Title</div>
+      </div>
+    </div>
+    <!-- add song -->
+    <div class="container song-finder hidden">
+      <div class="row">
+        <input type="text" class="artist_input text_input" placeholder="artist">
+        <button class="to-player">Back to Player</button>
+      </div>
+      <div class="row">
+        <input class="song-title_input text_input" placeholder="song title">
+        <div class="search_btn"><object data="../assets/images/search-ico.svg" height="24" width="24"></object>
+        </div>
+      </div>
+      <div class="row search_results">
+        <ul>
+          <li>
+            <button class="add-song">Add to Playlist</button>
+            <div class="song">
+              <div class="song-name">Sample Song Name</div>
+              <div class="song-artist">Some Artist</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- end song-finder -->
+    <div class="playlist">
+      <div class="playlist_header"></div>
+      <ul class="playlist-songs">
+        <li class="playlist-item">
+          <button class="play_btn"><object data="../assets/images/play-button-green.svg" height="32"
+              width="32"></object></button>
+          <div class="song">
+            <div class="song-name">Sample Song Name</div>
+            <div class="song-artist">Some Artist</div>
+          </div>
+          <button class="remove-song"><object data="../assets/images/remove.svg" height="10"
+              width="10"></object></button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</body>
+
+</html>
