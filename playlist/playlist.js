@@ -184,6 +184,8 @@ export class Player {
     pl_name.classList.add("hidden")
     pl_name_input.classList.remove("hidden")
     document.querySelector
+    document.getElementById("name_input").focus();
+    document.getElementById("name_input").select();
   }
   renamePlaylist() {
     // TODO 
@@ -249,7 +251,7 @@ export class Player {
           </div>
         </div>
         <div class="playlist-name_input hidden">
-          <input placeholder='Playlist Name' tabindex="1">
+          <input placeholder='Playlist Name' tabindex="1" id="name_input">
           <div class="playlist-add_btn highlight" tabindex="2"></div>          
           <button class="close-playlist-input highlight" tabindex="3"></button>
         </div>
