@@ -16,7 +16,7 @@ class Song {
     this.duration_ms = song.duration_ms
     this.id = song.id
     this.name = song.name
-    this.audio = new Audio(song.preview_url)
+    this.preview_url = song.preview_url
     this.track_number = song.track_number
     this.type = song.type
     this.href = song.href
@@ -27,8 +27,7 @@ class Song {
     this.album.name = album.name
   }
   play() {
-    console.log('type: this.audio - ', typeof this.audio);
-    this.audio.play()
+    new Audio(this.preview_url).play()
   }
   pause = () => {
     this.audio.pause()
@@ -40,7 +39,9 @@ class Playlist {
     this.name = name
     this.songs = []
     if (songs.length != 0) {
-      songs.map(song => this.songs.push(new Song(song)))
+      songs.map(song => {
+        return this.songs.push(new Song(song))
+      })
     }
   }
   addSong(song) {
@@ -48,7 +49,6 @@ class Playlist {
   }
   removeSong = (e) => {
     let song_index = parseInt(e.target.dataset.index)
-    console.log(this.songs);
     this.songs.splice(song_index, 1)
   }
 }
@@ -72,7 +72,6 @@ export class Player {
   }
   // PLAYLIST
   createPlaylist() {
-    console.log('createPlaylist');
     let name = document.querySelector(".playlist-name_input>input")
 
     if (this.playlists?.map(playlist => playlist.name).includes(name.value)) {
@@ -91,23 +90,17 @@ export class Player {
     name.value = ''
   }
   addSongToPlaylist = () => {
-    console.log('addSongToPlaylist');
     const song = this.foundSong
-    console.log(this.selectedPlaylist)
-    console.log('type:', typeof this.selectedPlaylist)
-    console.log(this.selectedPlaylist.songs)
     this.selectedPlaylist.addSong(new Song(song))
     this.populatePlaylistSongs()
   }
   showPlaylistName() {
-    console.log('showPlaylistName');
     let pl_name = document.querySelector(".playlist-name")
     let pl_name_input = document.querySelector(".playlist-name_input")
     pl_name_input.classList.add("hidden")
     pl_name.classList.remove("hidden")
   }
   populatePlaylistSongs() {
-    console.log('populatePlaylistSongs');
     let playlistList = document.querySelector(".playlist-songs")
     playlistList.innerHTML = ""
     this.selectedPlaylist?.songs?.forEach((song, i) => {
@@ -117,10 +110,6 @@ export class Player {
       playButton.classList = "play_btn highlight"
       playButton.setAttribute('data-index', i)
       playButton.onclick = () => {
-        console.log('play button listener');
-        console.log(this.selectedPlaylist);
-        console.log(this.selectedPlaylist.songs[i].play);
-        console.log(this.selectedPlaylist.songs[i].audio);
         this.selectedPlaylist.songs[i].play()
       }
       node.appendChild(playButton)
@@ -144,20 +133,16 @@ export class Player {
       node.appendChild(song_el)
       playlistList.appendChild(node)
     })
-    console.log(this.selectedPlaylist.songs)
   }
   // PLAYLIST - dropdown
   togglePlaylistDropdown() {
-    console.log('togglePlaylistDropdown');
     const dropdown = document.querySelector(".playlistDropdown").classList
     dropdown.toggle("show")
   }
   populatePlaylistDropdown() {
-    console.log('populatePlaylistDropdown');
     const list = document.querySelector(".playlistDropdown .playlist_list")
     list.innerHTML = ""
     this.playlists.forEach((playlist, i) => {
-      console.log(playlist);
       let node = document.createElement("li")
       node.innerHTML = `<li class="playlist-item" data-index=${i}>${playlist.name}</li>`
       node.className = "playlist-item"
@@ -175,16 +160,14 @@ export class Player {
     list.appendChild(add_node)
   }
   updateSelectedPlaylist(e) {
-    console.log('updateSelectedPlaylist');
     let index = parseInt(e.target.dataset.index)
     this.selectedPlaylist = this.playlists[index]
+    if (this.selectedPlaylist) document.querySelector(".to-search").disabled = false
     let playlistName = document.querySelector('.playlist-name>div')
     playlistName.innerHTML = this.selectedPlaylist.name
     this.populatePlaylistSongs()
-    console.log(this.selectedPlaylist);
   }
   showAddPlaylist() {
-    console.log('showAddPlaylist');
     let pl_name = document.querySelector(".playlist-name")
     let pl_name_input = document.querySelector(".playlist-name_input")
     pl_name.classList.add("hidden")
@@ -201,7 +184,6 @@ export class Player {
   }
   // SONG SEARCH
   validateSearchInputs() {
-    console.log('val inputs');
     let artist = document.querySelector(".artist_input").value
     let song = document.querySelector(".song-title_input").value
     if (!song || !artist)
@@ -210,13 +192,11 @@ export class Player {
       document.querySelector('.search_btn').disabled = false
   }
   togglePlaySearch(e) {
-    console.log('toggle PlaySearch');
     e.preventDefault()
     document.querySelector(".song-finder").classList.toggle("hidden")
     document.querySelector(".song-player").classList.toggle("hidden")
   }
   async findSong(e) {
-    console.log('findSong');
     e.preventDefault()
     let artist = document.querySelector(".artist_input").value
     let song = document.querySelector(".song-title_input").value
@@ -226,7 +206,6 @@ export class Player {
     this.renderFoundSong()
   }
   renderFoundSong() {
-    console.log('renderFoundSong');
     let node = document.querySelector(".search_result")
     node.innerHTML = `
         <button type="button" tabindex="13" class="add-song">Add to Playlist</button>
@@ -241,7 +220,6 @@ export class Player {
   }
   // PLAYER BUILD
   createPlayer(node) {
-    console.log('create player');
     let playerNode = document.createElement("div")
     playerNode.className = "player_container"
     playerNode.innerHTML = `
@@ -324,7 +302,7 @@ var sample_data = [{
       "audio": {},
       "track_number": 5,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/2ox1STg6AbcEHoHWlFtFwr"
+      "preview_url": "https://p.scdn.co/mp3-preview/5c0c25ad3501f3f07"
     },
     {
       "album": {
@@ -340,7 +318,7 @@ var sample_data = [{
       "audio": {},
       "track_number": 3,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/5eilSVtn5pkequUpyV6w9d"
+      "preview_url": "https://p.scdn.co/mp3-preview/d76553177fa0be633"
     }
   ]
 },
@@ -361,13 +339,13 @@ var sample_data = [{
       "audio": {},
       "track_number": 3,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/1EYTOP6cIzADbgxCFG87ML"
+      "preview_url": "https://api.spotify.com/v1/tracks/1EYTOP6cIzADbgxCFG87ML"
     },
     {
       "album": {
         "id": "5dN7F9DV0Qg1XRdIgW8rke",
         "name": "American Idiot",
-        "artwork_url": "https://i.scdn.co/image/ab67616d0000b27308a1b1e0674086d3f1995e1b"
+        "artwork_url": "https://p.scdn.co/mp3-preview/2d63c6b93eb7a6af1"
       },
       "artists": "Green Day",
       "disc_number": 1,
@@ -377,7 +355,7 @@ var sample_data = [{
       "audio": {},
       "track_number": 1,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/6nTiIhLmQ3FWhvrGafw2zj"
+      "preview_url": "https://p.scdn.co/mp3-preview/2d63c6b93eb7a6af1"
     },
     {
       "album": {
@@ -393,7 +371,7 @@ var sample_data = [{
       "audio": {},
       "track_number": 1,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/4X3qGigyU6ARi3HP4lWD95"
+      "preview_url": "https://api.spotify.com/v1/tracks/4X3qGigyU6ARi3HP4lWD95"
     }
   ]
 },
@@ -414,7 +392,7 @@ var sample_data = [{
       "audio": {},
       "track_number": 1,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/5KZ0qobWEFl892YjIC02SE"
+      "preview_url": "https://p.scdn.co/mp3-preview/555e48f6e3269d56e"
     },
     {
       "album": {
@@ -430,7 +408,7 @@ var sample_data = [{
       "audio": {},
       "track_number": 5,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/028njLMKzGg4gAVSgMeOhm"
+      "preview_url": null
     },
     {
       "album": {
@@ -446,7 +424,7 @@ var sample_data = [{
       "audio": {},
       "track_number": 1,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/6nTiIhLmQ3FWhvrGafw2zj"
+      "preview_url": "https://api.spotify.com/v1/tracks/6nTiIhLmQ3FWhvrGafw2zj"
     }
   ]
 }, {
@@ -466,7 +444,7 @@ var sample_data = [{
       "audio": {},
       "track_number": 8,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/4atMrAadB7dS8xn9vfk9PQ"
+      "preview_url": "https://p.scdn.co/mp3-preview/6ab6ee543fa501f1919c8712d0e61427de0a928c"
     },
     {
       "album": {
@@ -482,7 +460,7 @@ var sample_data = [{
       "audio": {},
       "track_number": 11,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/7ny1jOJSZAF6VBb7x9DRO2"
+      "preview_url": "https://p.scdn.co/mp3-preview/a4b4abd71422f1cbf0ba3db8aa779110c2786794"
     },
     {
       "album": {
@@ -498,7 +476,7 @@ var sample_data = [{
       "audio": {},
       "track_number": 11,
       "type": "track",
-      "href": "https://api.spotify.com/v1/tracks/5ToLAwgBzQvfKyWcaqb2GI"
+      "preview_url": "https://p.scdn.co/mp3-preview/8906ea790d9ae1f21d6a5e110b7af666c9abe97a?cid=a1a633263cbb4481bb1ae465e85bdfad"
     }
   ]
 }]
