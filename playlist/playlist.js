@@ -8,11 +8,11 @@ class Album {
     this.artwork_url = ''
   }
 }
-
 class Song {
   constructor(song) {
+    console.log(song);
     this.album = new Album(song.album.id)
-    this.artists = song.artists
+    this.artists = song.artists.map(artist => artist.name).join(", ")
     this.disc_number = song.disc_number
     this.duration_ms = song.duration_ms
     this.id = song.id
@@ -65,9 +65,10 @@ export class Player {
     this.selectedSong
     this.foundSong
     this.selectedPlaylist
-    this.playlists = []
+    this.playlists = sample_data
     this.populatePlaylistDropdown()
     this.attachListeners()
+    if (!this.selectedPlaylist) document.querySelector("to-search").disabled = true
   }
   // PLAYLIST
   createPlaylist() {
@@ -173,6 +174,8 @@ export class Player {
     this.selectedPlaylist = this.playlists[index]
     let playlistName = document.querySelector('.playlist-name>div')
     playlistName.innerHTML = this.selectedPlaylist.name
+    this.populatePlaylistSongs()
+    console.log(this.selectedPlaylist);
   }
   showAddPlaylist() {
     console.log('showAddPlaylist');
@@ -180,9 +183,13 @@ export class Player {
     let pl_name_input = document.querySelector(".playlist-name_input")
     pl_name.classList.add("hidden")
     pl_name_input.classList.remove("hidden")
+    document.querySelector
   }
   renamePlaylist() {
     // TODO 
+  }
+  removePlaylist() {
+    // TODO
   }
   // SONG SEARCH
   validateSearchInputs() {
@@ -213,19 +220,16 @@ export class Player {
   renderFoundSong() {
     console.log('renderFoundSong');
     let node = document.querySelector(".search_result")
-    let artists = this.foundSong.artists.map(artist => artist.name).join(", ")
     node.innerHTML = `
         <button type="button" tabindex="13" class="add-song">Add to Playlist</button>
         <div class="song">
           <div class="song-info">
             <div class="song-name">${this.foundSong.name}</div>
-            <div class="song-meta">${artists} - ${this.foundSong.album.name}</div>
+            <div class="song-meta">${this.foundSong.artists} - ${this.foundSong.album.name}</div>
           </div>
           <img src="${this.foundSong.album.artwork_url}" alt="" class="album-art">
-          <button class="remove-song"></button>
         </div>`
     document.querySelector(".add-song").onclick = this.addSongToPlaylist
-    console.log('found song after render: ', this.foundSong);
   }
   // PLAYER BUILD
   createPlayer(node) {
@@ -245,11 +249,11 @@ export class Player {
           </div>
         </div>
         <div class="playlist-name_input hidden">
-          <input placeholder='Playlist Name'>
-          <div class="playlist-add_btn"></div>          
-          <button class="close-playlist-input"></button>
+          <input placeholder='Playlist Name' tabindex="1">
+          <div class="playlist-add_btn highlight" tabindex="2"></div>          
+          <button class="close-playlist-input highlight" tabindex="3"></button>
         </div>
-        <button class="to-search highlight" disabled>+ Song</button>        
+        <button class="to-search highlight" tabindex="4">+ Song</button>        
       </div>
       <div class="row">
         <div class="play_btn highlight">
@@ -294,3 +298,199 @@ export class Player {
     document.querySelector(".playlist-add_btn").addEventListener("click", this.createPlaylist)
   }
 }
+
+var sample_data = [{
+  "name": "Walks on the Beach",
+  "songs": [
+    {
+      "album": {
+        "id": "5IJm0boSQuEBLiYNZJKV2Y",
+        "name": "Sixteen Stone (Remastered)",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b273b915466e715e0bf6c3da35a1"
+      },
+      "artists": "Bush",
+      "disc_number": 1,
+      "duration_ms": 326666,
+      "id": "2ox1STg6AbcEHoHWlFtFwr",
+      "name": "Comedown",
+      "audio": {},
+      "track_number": 5,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/2ox1STg6AbcEHoHWlFtFwr"
+    },
+    {
+      "album": {
+        "id": "5nLESM0i6o7nWCyu7FAeb9",
+        "name": "Razorblade Suitcase (In Addition)",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b273b96dce8b683b8be8126a2f5d"
+      },
+      "artists": "Bush",
+      "disc_number": 1,
+      "duration_ms": 291053,
+      "id": "5eilSVtn5pkequUpyV6w9d",
+      "name": "Swallowed",
+      "audio": {},
+      "track_number": 3,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/5eilSVtn5pkequUpyV6w9d"
+    }
+  ]
+},
+{
+  "name": "Runs in the Woods",
+  "songs": [
+    {
+      "album": {
+        "id": "1SmsWlQZojAXz5H0i26bRl",
+        "name": "Portrait Of An American Family",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b2736f83d341ac84cf0b995b554e"
+      },
+      "artists": "Marilyn Manson",
+      "disc_number": 1,
+      "duration_ms": 272800,
+      "id": "1EYTOP6cIzADbgxCFG87ML",
+      "name": "Lunchbox",
+      "audio": {},
+      "track_number": 3,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/1EYTOP6cIzADbgxCFG87ML"
+    },
+    {
+      "album": {
+        "id": "5dN7F9DV0Qg1XRdIgW8rke",
+        "name": "American Idiot",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b27308a1b1e0674086d3f1995e1b"
+      },
+      "artists": "Green Day",
+      "disc_number": 1,
+      "duration_ms": 176346,
+      "id": "6nTiIhLmQ3FWhvrGafw2zj",
+      "name": "American Idiot",
+      "audio": {},
+      "track_number": 1,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/6nTiIhLmQ3FWhvrGafw2zj"
+    },
+    {
+      "album": {
+        "id": "3htGAnJ90pQHse0tRzxC56",
+        "name": "Hang-Ups",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b2735e25d83362d98523fb82fc0d"
+      },
+      "artists": "Goldfinger",
+      "disc_number": 1,
+      "duration_ms": 185026,
+      "id": "4X3qGigyU6ARi3HP4lWD95",
+      "name": "Superman",
+      "audio": {},
+      "track_number": 1,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/4X3qGigyU6ARi3HP4lWD95"
+    }
+  ]
+},
+{
+  "name": "Hikes in the Mountains",
+  "songs": [
+    {
+      "album": {
+        "id": "3gBVdu4a1MMJVMy6vwPEb8",
+        "name": "Pablo Honey",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b273df55e326ed144ab4f5cecf95"
+      },
+      "artists": "Radiohead",
+      "disc_number": 1,
+      "duration_ms": 208666,
+      "id": "5KZ0qobWEFl892YjIC02SE",
+      "name": "You",
+      "audio": {},
+      "track_number": 1,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/5KZ0qobWEFl892YjIC02SE"
+    },
+    {
+      "album": {
+        "id": "0hHopYqXhuvYSHtVyrcb1g",
+        "name": "Infinity On High",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b273ff59837e170f95a373afc0ec"
+      },
+      "artists": "Fall Out Boy",
+      "disc_number": 1,
+      "duration_ms": 230506,
+      "id": "028njLMKzGg4gAVSgMeOhm",
+      "name": "Hum Hallelujah",
+      "audio": {},
+      "track_number": 5,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/028njLMKzGg4gAVSgMeOhm"
+    },
+    {
+      "album": {
+        "id": "5dN7F9DV0Qg1XRdIgW8rke",
+        "name": "American Idiot",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b27308a1b1e0674086d3f1995e1b"
+      },
+      "artists": "Green Day",
+      "disc_number": 1,
+      "duration_ms": 176346,
+      "id": "6nTiIhLmQ3FWhvrGafw2zj",
+      "name": "American Idiot",
+      "audio": {},
+      "track_number": 1,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/6nTiIhLmQ3FWhvrGafw2zj"
+    }
+  ]
+}, {
+  "name": "Rounding Up the Locals for Incineration",
+  "songs": [
+    {
+      "album": {
+        "id": "78bpIziExqiI9qztvNFlQu",
+        "name": "AM",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b2734ae1c4c5c45aabe565499163"
+      },
+      "artists": "Arctic Monkeys",
+      "disc_number": 1,
+      "duration_ms": 181049,
+      "id": "4atMrAadB7dS8xn9vfk9PQ",
+      "name": "Fireside",
+      "audio": {},
+      "track_number": 8,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/4atMrAadB7dS8xn9vfk9PQ"
+    },
+    {
+      "album": {
+        "id": "4FtOLTQqwnxpaABrJWYdBy",
+        "name": "Rockin' The Suburbs",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b273d25c579ea362aeee960d0d6b"
+      },
+      "artists": "Ben Folds",
+      "disc_number": 1,
+      "duration_ms": 229506,
+      "id": "7ny1jOJSZAF6VBb7x9DRO2",
+      "name": "Fired",
+      "audio": {},
+      "track_number": 11,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/7ny1jOJSZAF6VBb7x9DRO2"
+    },
+    {
+      "album": {
+        "id": "36WLicHKpbEZ4CDR1KxZEW",
+        "name": "Hungry Ghosts",
+        "artwork_url": "https://i.scdn.co/image/ab67616d0000b273ebe2db76f82a04fb72aff6d5"
+      },
+      "artists": "OK Go",
+      "disc_number": 1,
+      "duration_ms": 256623,
+      "id": "5ToLAwgBzQvfKyWcaqb2GI",
+      "name": "The Great Fire",
+      "audio": {},
+      "track_number": 11,
+      "type": "track",
+      "href": "https://api.spotify.com/v1/tracks/5ToLAwgBzQvfKyWcaqb2GI"
+    }
+  ]
+}]
