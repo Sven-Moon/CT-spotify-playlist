@@ -27,6 +27,7 @@ class Song {
     this.album.name = album.name
   }
   play() {
+    console.log('type: this.audio - ', typeof this.audio);
     this.audio.play()
   }
   pause = () => {
@@ -50,8 +51,6 @@ class Playlist {
     console.log(this.songs);
     this.songs.splice(song_index, 1)
   }
-  playSong(song_index) {
-  }
 }
 
 export class Player {
@@ -69,7 +68,7 @@ export class Player {
     this.playlists = sample_data.map(data => new Playlist(data.name, data.songs))
     this.populatePlaylistDropdown()
     this.attachListeners()
-    if (!this.selectedPlaylist) document.querySelector("to-search").disabled = true
+    if (!this.selectedPlaylist) document.querySelector(".to-search").disabled = true
   }
   // PLAYLIST
   createPlaylist() {
@@ -122,10 +121,8 @@ export class Player {
         console.log(this.selectedPlaylist);
         console.log(this.selectedPlaylist.songs[i].play);
         console.log(this.selectedPlaylist.songs[i].audio);
-        this.selectedPlaylist.songs[i].play
+        this.selectedPlaylist.songs[i].play()
       }
-      // playButton.onclick = this.updateSelectedPlaylists
-      // playButton.innerHTML = `<object data="../assets/images/play-button-green.svg" height="32" width="32">`
       node.appendChild(playButton)
       let song_el = document.createElement("div")
       song_el.className = "song"
@@ -161,7 +158,6 @@ export class Player {
     list.innerHTML = ""
     this.playlists.forEach((playlist, i) => {
       console.log(playlist);
-      console.log(playlist.name.name);
       let node = document.createElement("li")
       node.innerHTML = `<li class="playlist-item" data-index=${i}>${playlist.name}</li>`
       node.className = "playlist-item"
