@@ -1,5 +1,5 @@
 export class Spotify {
-  constructor(client_id = '', client_secret = '') {
+  constructor(client_id = 'a1a633263cbb4481bb1ae465e85bdfad', client_secret = 'bd7c1f3e82314640976140fedbf6209a') {
     this.authToken = ''
     this.client_id = client_id
     this.client_secret = client_secret

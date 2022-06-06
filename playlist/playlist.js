@@ -27,13 +27,12 @@ class Song {
     this.album.artwork_url = album.images[0].url
     this.album.name = album.name
   }
-  play() {
+  play = () => {
     this.audio.play()
   }
   pause() {
     this.audio.pause()
   }
-
 }
 
 class Playlist {
@@ -43,11 +42,11 @@ class Playlist {
     // this.spotify = new Spotify()
   }
   addSong(song) {
-    console.log('before');
     this.songs.push(song)
-    console.log('after');
   }
-  removeSong(song_index) {
+  removeSong = (e) => {
+    let song_index = parseInt(e.target.dataset.index)
+    console.log(this.songs);
     this.songs.splice(song_index, 1)
   }
   playSong(song_index) {
@@ -60,6 +59,7 @@ export class Player {
     this.createPlaylist = this.createPlaylist.bind(this)
     this.findSong = this.findSong.bind(this)
     this.showAddPlaylist = this.showAddPlaylist.bind(this)
+    this.updateSelectedPlaylist = this.updateSelectedPlaylist.bind(this)
     const node = document.getElementById(id)
     this.createPlayer(node)
     this.selectedSong
@@ -69,42 +69,15 @@ export class Player {
     this.populatePlaylistDropdown()
     this.attachListeners()
   }
-  playSong(playlist, song_index) { }
-  async findSong(e) {
-    console.log('findSong');
-    e.preventDefault()
-    let artist = document.querySelector(".artist_input").value
-    let song = document.querySelector(".song-title_input").value
-    let data = await spotify.getSong(artist, song)
-    this.foundSong = new Song(data)
-    await this.foundSong.getAlbumInfo(this.foundSong.album.id)
-    this.renderFoundSong()
-  }
-  renderFoundSong() {
-    console.log('renderFoundSong');
-    let node = document.querySelector(".search_result")
-    let artists = this.foundSong.artists.map(artist => artist.name).join(", ")
-    node.innerHTML = `
-        <button type="button" tabindex="13" class="add-song">Add to Playlist</button>
-        <div class="song">
-          <div class="song-info">
-            <div class="song-name">${this.foundSong.name}</div>
-            <div class="song-meta">${artists} - ${this.foundSong.album.name}</div>
-          </div>
-          <img src="${this.foundSong.album.artwork_url}" alt="" class="album-art">
-          <button class="remove-song"></button>
-        </div>`
-    document.querySelector(".add-song").onclick = this.addSongToPlaylist
-    console.log('found song after render: ', this.foundSong);
-  }
   // PLAYLIST
   createPlaylist() {
     console.log('createPlaylist');
-    let name = document.querySelector(".playlist-name_input>input").value
-    if (this.playlists?.map(playlist => playlist.name).includes(name)) {
+    let name = document.querySelector(".playlist-name_input>input")
+
+    if (this.playlists?.map(playlist => playlist.name).includes(name.value)) {
       alert('You already have a playlist with that name. Try another.')
     } else {
-      let new_playlist = new Playlist(name)
+      let new_playlist = new Playlist(name.value)
       this.playlists.push(new_playlist)
       this.selectedPlaylist = this.playlists[this.playlists.length - 1]
       // update field
@@ -113,13 +86,15 @@ export class Player {
     this.populatePlaylistDropdown()
     this.populatePlaylistSongs()
     this.showPlaylistName()
+    document.getElementsByClassName("to-search")[0].disabled = false
+    name.value = ''
   }
   addSongToPlaylist = () => {
-    const song = this.foundSong
     console.log('addSongToPlaylist');
-    console.log(song);
+    const song = this.foundSong
+    console.log(this.selectedPlaylist.songs)
     this.selectedPlaylist.addSong(song)
-    console.log('before call add to');
+    this.populatePlaylistSongs()
   }
   showPlaylistName() {
     console.log('showPlaylistName');
@@ -132,21 +107,38 @@ export class Player {
     console.log('populatePlaylistSongs');
     let playlistList = document.querySelector(".playlist-songs")
     playlistList.innerHTML = ""
-    console.log(this.selectedPlaylist);
-    this.selectedPlaylist?.songs?.forEach(song => {
-      playlistList.insertAdjacentHTML("beforeend", `<li class="playlist-item">
-          <div class="play_btn highlight">
-            <object data="../assets/images/play-button-green.svg" height="32" width="32"></object></div>
-            <div class="song">
-              <div class="song-info">
-                <div class="song-name">${song.name}</div>
-                <div class="song-meta">${song.artist} - ${song.album.name}</div>
-              </div>
-            <img src="${song.album.artwork_url}" alt="" class="album-art>
-            <button class="remove-song"></button>
-          </div>
-        </li>`)
+    console.log('before loop:', this.selectedPlaylist.songs)
+    this.selectedPlaylist?.songs?.forEach((song, i) => {
+      let node = document.createElement("li")
+      node.className = "playlist-item"
+      let playButton = document.createElement("div")
+      playButton.classList = "play_btn highlight"
+      playButton.setAttribute('data-index', i)
+      playButton.onclick = this.selectedPlaylist.songs[i].play
+      // playButton.onclick = this.updateSelectedPlaylists
+      // playButton.innerHTML = `<object data="../assets/images/play-button-green.svg" height="32" width="32">`
+      node.appendChild(playButton)
+      let song_el = document.createElement("div")
+      song_el.className = "song"
+      song_el.innerHTML = `
+        <div class="song-info">
+          <div class="song-name">${song.name}</div>
+          <div class="song-meta">${song.artists} - ${song.album.name}</div>
+        </div>
+        <img src="${song.album.artwork_url}" alt="" class="album-art">
+        <button class="remove-song"></button>`
+      let removeButton = document.createElement("button")
+      removeButton.className = "remove-song"
+      removeButton.setAttribute("data-index", i)
+      removeButton.onclick = (e) => {
+        this.selectedPlaylist.removeSong(e)
+        this.populatePlaylistSongs()
+      }
+      song_el.appendChild(removeButton)
+      node.appendChild(song_el)
+      playlistList.appendChild(node)
     })
+    console.log(this.selectedPlaylist.songs)
   }
   // PLAYLIST - dropdown
   togglePlaylistDropdown() {
@@ -159,9 +151,11 @@ export class Player {
     const list = document.querySelector(".playlistDropdown .playlist_list")
     list.innerHTML = ""
     this.playlists.forEach((playlist, i) => {
-      console.log('playlist name: ', playlist.name);
-      list.insertAdjacentHTML("afterbegin", `
-      <li class="playlist-item" data-index=${i}>${playlist.name}</li>`)
+      let node = document.createElement("li")
+      node.innerHTML = `<li class="playlist-item" data-index=${i}>${playlist.name}</li>`
+      node.className = "playlist-item"
+      node.onclick = this.updateSelectedPlaylist
+      list.appendChild(node)
     })
     let rename_node = document.createElement("li")
     rename_node.className = "rename-playlist"
@@ -175,10 +169,10 @@ export class Player {
   }
   updateSelectedPlaylist(e) {
     console.log('updateSelectedPlaylist');
-    let index = e.target.dataset.index
+    let index = parseInt(e.target.dataset.index)
     this.selectedPlaylist = this.playlists[index]
-    let playlistName = document.querySelector('.playlist-name')
-    playlistName.innerHTML = playlist.name
+    let playlistName = document.querySelector('.playlist-name>div')
+    playlistName.innerHTML = this.selectedPlaylist.name
   }
   showAddPlaylist() {
     console.log('showAddPlaylist');
@@ -206,6 +200,33 @@ export class Player {
     document.querySelector(".song-finder").classList.toggle("hidden")
     document.querySelector(".song-player").classList.toggle("hidden")
   }
+  async findSong(e) {
+    console.log('findSong');
+    e.preventDefault()
+    let artist = document.querySelector(".artist_input").value
+    let song = document.querySelector(".song-title_input").value
+    let data = await spotify.getSong(artist, song)
+    this.foundSong = new Song(data)
+    await this.foundSong.getAlbumInfo(this.foundSong.album.id)
+    this.renderFoundSong()
+  }
+  renderFoundSong() {
+    console.log('renderFoundSong');
+    let node = document.querySelector(".search_result")
+    let artists = this.foundSong.artists.map(artist => artist.name).join(", ")
+    node.innerHTML = `
+        <button type="button" tabindex="13" class="add-song">Add to Playlist</button>
+        <div class="song">
+          <div class="song-info">
+            <div class="song-name">${this.foundSong.name}</div>
+            <div class="song-meta">${artists} - ${this.foundSong.album.name}</div>
+          </div>
+          <img src="${this.foundSong.album.artwork_url}" alt="" class="album-art">
+          <button class="remove-song"></button>
+        </div>`
+    document.querySelector(".add-song").onclick = this.addSongToPlaylist
+    console.log('found song after render: ', this.foundSong);
+  }
   // PLAYER BUILD
   createPlayer(node) {
     console.log('create player');
@@ -228,11 +249,10 @@ export class Player {
           <div class="playlist-add_btn"></div>          
           <button class="close-playlist-input"></button>
         </div>
-        <button class="to-search highlight">+ Song</button>        
+        <button class="to-search highlight" disabled>+ Song</button>        
       </div>
       <div class="row">
         <div class="play_btn highlight">
-          <object data="../assets/images/play-button-green.svg" height="32" width="32"></object>
         </div>
         <div class="playing">${this.selectedSong || "--- / ---"}</div>
       </div>
@@ -252,20 +272,8 @@ export class Player {
     </form>
     <!-- end song-finder -->
     <div class="playlist">
-      <div class="playlist_header">Playlist Name</div>
+      <div class="playlist_header">${this.selectedPlaylist?.name || ''}</div>
       <ul class="playlist-songs">
-        <li class="playlist-item">
-          <div class="play_btn highlight"><object data="../assets/images/play-button-green.svg" height="32" width="32"></object></div>
-          <div class="song">
-            <div class="song-info">
-              <div class="song-name">Song Name</div>
-              <div class="song-meta">Some Artist - Some Album</div>
-            </div>
-            <img src="#" alt="" class="album-art>
-            <button class="remove-song"></button>
-          </div>
-        </li>
-        <li class="add-playlist"></li>
       </ul>
     </div>`
     node.appendChild(playerNode)
@@ -282,11 +290,7 @@ export class Player {
     // Playlist Dropdown
     document.querySelector(".playlist-menu_btn").addEventListener("click", this.togglePlaylistDropdown)
     document.querySelector(".playlistDropdown").addEventListener("click", this.togglePlaylistDropdown)
-    // document.querySelector(".add-playlist").addEventListener("click", this.showAddPlaylist)
     document.querySelector(".close-playlist-input").addEventListener("click", this.showPlaylistName)
-    document.querySelector(".playlist-item").addEventListener("click", this.updateSelectedPlaylist)
     document.querySelector(".playlist-add_btn").addEventListener("click", this.createPlaylist)
-    // Song Finder
-    // document.querySelector(".add-song").addEventListener("click", this.addSongToPlaylist)
   }
 }
