@@ -2,17 +2,16 @@ import { Spotify } from '../api/spotify_api.js'
 const spotify = new Spotify()
 
 class Album {
-  constructor(id) {
-    this.id = id
-    this.name = ''
-    this.artwork_url = ''
+  constructor(album) {
+    this.id = album.id
+    this.name = album.name ? album.name : ''
+    this.artwork_url = album.artwork_url ? album.artwork_url : ''
   }
 }
 class Song {
   constructor(song) {
-    console.log(song);
-    this.album = new Album(song.album.id)
-    this.artists = song.artists.map(artist => artist.name).join(", ")
+    this.album = new Album(song.album)
+    this.artists = (typeof song.artists == 'string') ? song.artists : song.artists.map(artist => artist.name).join(", ")
     this.disc_number = song.disc_number
     this.duration_ms = song.duration_ms
     this.id = song.id
@@ -36,10 +35,12 @@ class Song {
 }
 
 class Playlist {
-  constructor(name) {
+  constructor(name, songs = []) {
     this.name = name
     this.songs = []
-    // this.spotify = new Spotify()
+    if (songs.length != 0) {
+      songs.map(song => this.songs.push(new Song(song)))
+    }
   }
   addSong(song) {
     this.songs.push(song)
@@ -65,7 +66,7 @@ export class Player {
     this.selectedSong
     this.foundSong
     this.selectedPlaylist
-    this.playlists = sample_data
+    this.playlists = sample_data.map(data => new Playlist(data.name, data.songs))
     this.populatePlaylistDropdown()
     this.attachListeners()
     if (!this.selectedPlaylist) document.querySelector("to-search").disabled = true
@@ -93,9 +94,10 @@ export class Player {
   addSongToPlaylist = () => {
     console.log('addSongToPlaylist');
     const song = this.foundSong
-    console.log(typeof song);
+    console.log(this.selectedPlaylist)
+    console.log('type:', typeof this.selectedPlaylist)
     console.log(this.selectedPlaylist.songs)
-    this.selectedPlaylist.addSong(song)
+    this.selectedPlaylist.addSong(new Song(song))
     this.populatePlaylistSongs()
   }
   showPlaylistName() {
@@ -156,6 +158,8 @@ export class Player {
     const list = document.querySelector(".playlistDropdown .playlist_list")
     list.innerHTML = ""
     this.playlists.forEach((playlist, i) => {
+      console.log(playlist);
+      console.log(playlist.name.name);
       let node = document.createElement("li")
       node.innerHTML = `<li class="playlist-item" data-index=${i}>${playlist.name}</li>`
       node.className = "playlist-item"

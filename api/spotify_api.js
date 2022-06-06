@@ -1,5 +1,5 @@
 export class Spotify {
-  constructor(client_id = '', client_secret = '') {
+  constructor(client_id = 'a1a633263cbb4481bb1ae465e85bdfad', client_secret = '') {
     this.authToken = ''
     this.client_id = client_id
     this.client_secret = client_secret
@@ -22,7 +22,6 @@ export class Spotify {
     const response = await fetch(url, options)
 
     if (response.status != 200) ((err) => console.log('What happened on auth attempt: ', err))
-    console.log(response);
 
     let token = await response.json();
     return token.access_token
@@ -30,13 +29,12 @@ export class Spotify {
   loadToken = async () => {
     if (!this.authToken) {
       let auth = await this.getAuth()
-      console.log('new token obtained:', auth);
       return auth
     }
 
   }
   getSong = async (artist, track) => {
-    const token = await this.loadToken()
+    this.token = await this.loadToken()
     return await fetch(`https://api.spotify.com/v1/search?type=track&q=track:${track}+artist:${artist}&limit=1`,
       {
         method: 'GET',
