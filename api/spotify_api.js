@@ -6,8 +6,8 @@ export class Spotify {
     this.currentSong
   }
   getAuth = async () => {
-    var client_id = 'a1a633263cbb4481bb1ae465e85bdfad';
-    var client_secret = 'bd7c1f3e82314640976140fedbf6209a';
+    var client_id = this.client_id
+    var client_secret = this.client_secret
     const encodedString = btoa(client_id + ':' + client_secret)
     const url = 'https://accounts.spotify.com/api/token'
     const options = {
@@ -21,12 +21,17 @@ export class Spotify {
 
     const response = await fetch(url, options)
 
+    if (response.status != 200) ((err) => console.log('What happened on auth attempt: ', err))
+    console.log(response);
+
     let token = await response.json();
     return token.access_token
   }
   loadToken = async () => {
     if (!this.authToken) {
-      return await this.getAuth()
+      let auth = await this.getAuth()
+      console.log('new token obtained:', auth);
+      return auth
     }
 
   }

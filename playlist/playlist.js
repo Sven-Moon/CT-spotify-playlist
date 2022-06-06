@@ -93,6 +93,7 @@ export class Player {
   addSongToPlaylist = () => {
     console.log('addSongToPlaylist');
     const song = this.foundSong
+    console.log(typeof song);
     console.log(this.selectedPlaylist.songs)
     this.selectedPlaylist.addSong(song)
     this.populatePlaylistSongs()
@@ -108,14 +109,17 @@ export class Player {
     console.log('populatePlaylistSongs');
     let playlistList = document.querySelector(".playlist-songs")
     playlistList.innerHTML = ""
-    console.log('before loop:', this.selectedPlaylist.songs)
     this.selectedPlaylist?.songs?.forEach((song, i) => {
       let node = document.createElement("li")
       node.className = "playlist-item"
       let playButton = document.createElement("div")
       playButton.classList = "play_btn highlight"
       playButton.setAttribute('data-index', i)
-      playButton.onclick = this.selectedPlaylist.songs[i].play
+      playButton.onclick = () => {
+        console.log('play button listener');
+        console.log(typeof this.selectedPlaylist.songs[i]);
+        this.selectedPlaylist.songs[i].play
+      }
       // playButton.onclick = this.updateSelectedPlaylists
       // playButton.innerHTML = `<object data="../assets/images/play-button-green.svg" height="32" width="32">`
       node.appendChild(playButton)
