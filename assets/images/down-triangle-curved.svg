@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg116"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   sodipodi:docname="down-triangle-curved.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview118"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.38796647"
+     inkscape:cx="775.84024"
+     inkscape:cy="788.72795"
+     inkscape:window-width="1284"
+     inkscape:window-height="1041"
+     inkscape:window-x="574"
+     inkscape:window-y="27"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs113" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect849"
+       style="fill:#9acd32;fill-rule:evenodd;stroke-width:0.295799"
+       d="m 37.021931,99.543875 c 0.3607,2.476015 1.502822,4.859675 3.444933,6.745785 l 54.742639,53.16468 c 4.678184,4.5433 12.103607,4.43636 16.648817,-0.23996 l 53.21355,-54.74854 c 1.68043,-1.72891 2.72072,-3.8342 3.13343,-6.029528 z" />
+  </g>
+</svg>

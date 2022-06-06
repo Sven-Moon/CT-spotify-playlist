@@ -9,6 +9,11 @@
   display: none
 }
 
+
+div.show {
+  display: block
+}
+
 ul,
 li {
   margin: 0;

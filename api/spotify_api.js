@@ -3,6 +3,7 @@ export class Spotify {
     this.authToken = ''
     this.client_id = client_id
     this.client_secret = client_secret
+    this.currentSong
   }
   getAuth = async () => {
     var client_id = 'a1a633263cbb4481bb1ae465e85bdfad';
@@ -31,7 +32,7 @@ export class Spotify {
   }
   getSong = async (artist, track) => {
     const token = await this.loadToken()
-    await fetch(`https://api.spotify.com/v1/search?type=track&q=track:${track}+artist:${artist}&limit=1`,
+    return await fetch(`https://api.spotify.com/v1/search?type=track&q=track:${track}+artist:${artist}&limit=1`,
       {
         method: 'GET',
         headers: {
@@ -44,9 +45,8 @@ export class Spotify {
         return data
       })
       .then((data) => {
-        return data
         data = data.tracks.items[0]
-        console.log('returning', data);
+        this.currentSong = data
         return data
       }, err => { console.log(err) })
     // .catch(err => console.log(err))
@@ -57,8 +57,7 @@ export class Spotify {
   }
   getAlbum = async (album_id) => {
     const token = await this.loadToken()
-    let data = await fetch(`https://api.spotify.com/v1/albums/${album_id
-      }`,
+    return await fetch(`https://api.spotify.com/v1/albums/${album_id}`,
       {
         method: 'GET',
         headers: {
@@ -72,7 +71,6 @@ export class Spotify {
         // return data.tracks.items[0]
       })
       .then(data => {
-        console.log(data);
         return {
           images: data.images,
           id: data.id,
@@ -104,10 +102,7 @@ export class Spotify {
   strConvert(str) {
     return str.replace(/\w/, '%20')
   }
-
 }
-
-const spot = new Spotify()
 
 
 
