@@ -26,10 +26,10 @@ class Song {
     this.album.artwork_url = album.images[0].url
     this.album.name = album.name
   }
-  play = () => {
+  play() {
     this.audio.play()
   }
-  pause() {
+  pause = () => {
     this.audio.pause()
   }
 }
@@ -119,7 +119,9 @@ export class Player {
       playButton.setAttribute('data-index', i)
       playButton.onclick = () => {
         console.log('play button listener');
-        console.log(typeof this.selectedPlaylist.songs[i]);
+        console.log(this.selectedPlaylist);
+        console.log(this.selectedPlaylist.songs[i].play);
+        console.log(this.selectedPlaylist.songs[i].audio);
         this.selectedPlaylist.songs[i].play
       }
       // playButton.onclick = this.updateSelectedPlaylists
