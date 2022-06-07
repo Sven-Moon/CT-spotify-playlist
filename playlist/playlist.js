@@ -250,11 +250,11 @@ export class Player {
     <!-- add song -->
     <form class="container song-finder hidden">
       <div class="row">
-        <input tabindex="10" type="text" class="artist_input text_input" placeholder="artist" value="bush">
+        <input tabindex="10" type="text" class="artist_input text_input" placeholder="artist">
         <button tabindex="14" class="to-player highlight">Back to Player</button>
       </div>
       <div class="row">
-        <input tabindex="11" class="song-title_input text_input" placeholder="song title" value="comedown">
+        <input tabindex="11" class="song-title_input text_input" placeholder="song title">
         <button tabindex="12" class="search_btn highlight" >
         </button>
       </div>
